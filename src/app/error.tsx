@@ -22,7 +22,7 @@ export default function Error({ error, reset }: ErrorTypeProps) {
       >
         Try again
       </button>
-      <Link href="/" className="text-blue-600 mt-5 underline">
+      <Link href="/home" className="text-blue-600 mt-5 underline">
         Go to home page
       </Link>
     </div>

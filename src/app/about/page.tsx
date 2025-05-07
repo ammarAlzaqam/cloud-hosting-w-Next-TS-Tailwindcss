@@ -1,24 +1,11 @@
-import Image from "next/image";
-import CloudImage from "../../../public/cloud-hosting.png";
-
 const AboutPage = () => {
   return (
     <section>
-      <h1 className="text-4xl font-bold text-gray-800 mt-7">About Page</h1>
-      <p className="my-4 text-gray-600">
-        This is the about page of our application. Here you can find information
-        about our services and team.
-      </p>
-      <div>
-        <Image
-          src={CloudImage}
-          alt="Cloud"
-          width={500}
-          height={500}
-          className="rounded-3xl shadow-lg mt-10"
-          priority
-        />
-      </div>
+      <h1 className="text-3xl font-bold p-5 text-gray-800 capitalize">
+        About this page
+      </h1>
+
+      <p className="text-gray-500 px-5 text-xl" >The best web hosting solution for your online success</p>
     </section>
   );
 };

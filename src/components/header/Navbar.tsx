@@ -43,7 +43,7 @@ export default function Navbar() {
           <Link
             onClick={() => setToggle((prev) => !prev)}
             className={styles.navLink}
-            href="/"
+            href="/home"
           >
             Home
           </Link>
