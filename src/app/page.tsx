@@ -3,13 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   useEffect(() => {
     router.push("/home");
-  }, []);
+  }, [router]);
 
   return null;
 };
 
-export default page;
+export default Page;

@@ -17,4 +17,8 @@ body {
   font-family: sans-serif;
 }
 
+.overflow-height {
+  height: calc(100vh - 164px);
+}
+
 @import "tailwindcss";

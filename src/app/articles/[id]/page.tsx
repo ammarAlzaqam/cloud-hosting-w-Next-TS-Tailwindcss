@@ -1,21 +1,23 @@
+import AddCommentForm from "../components/comments/AddCommentForm";
+import CommentItem from "../components/comments/CommentItem";
 import { getPost } from "../requests";
 import { Article } from "../types";
 import BackButton from "./BackButton";
 
-interface ArticlePagePropsType {
-  params: {
+type Props = {
+  params: Promise<{
     id: string;
-  };
-}
+  }>;
+};
 
-const SingleArticlePage = async ({ params }: ArticlePagePropsType) => {
+export default async function SingleArticlePage({ params }: Props) {
   const { id } = await params;
   // Fetch the article data using the id
   const Article: Article = await getPost(id);
 
   return (
-    <div className="bg-gray-50 p-4 rounded-lg shadow-md mt-10 w-fit mx-auto">
-      <div className="flex gap-2">
+    <div className="mt-10 w-fit mx-auto">
+      <div className="flex gap-2 bg-gray-50 p-4 rounded-lg shadow-md ">
         <BackButton />
         <div className="mt-5">
           <h1 className="text-2xl font-bold">{Article.title}</h1>
@@ -23,8 +25,13 @@ const SingleArticlePage = async ({ params }: ArticlePagePropsType) => {
           <h2 className="mt-4">{Article.body}</h2>
         </div>
       </div>
+      <AddCommentForm />
+      <h4 className="text-xl text-gray-800 font-bold mt-10 mb-4">
+        Comments
+      </h4>
+      <CommentItem />
+      <CommentItem />
+      <CommentItem />
     </div>
   );
-};
-
-export default SingleArticlePage;
+}

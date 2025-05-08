@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import { Slide, toast } from "react-toastify";
+
 export default function LoginForm() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -8,18 +9,16 @@ export default function LoginForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email) {
-      toast.error("Email is required", {
+      return toast.error("Email is required", {
         position: "top-center",
         autoClose: 3000,
         theme: "colored",
         transition: Slide,
-        });
-      return;
+      });
     }
 
     if (!password) {
-      toast.error("password is required");
-      return;
+      return toast.error("password is required");
     }
 
     setEmail("");
@@ -30,7 +29,7 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <input
         className="p-2 rounded-md border focus:bg-gray-100"
-        type="text"
+        type="email"
         placeholder="Enter Your Email"
         value={email}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -52,6 +51,15 @@ export default function LoginForm() {
       >
         login
       </button>
+
+      <div>
+        <p className="text-center text-gray-500 text-sm">
+          Don&#39;t have an account?{" "}
+          <a href="/register" className="text-blue-600 hover:underline">
+            Register
+          </a>
+        </p>
+      </div>
     </form>
   );
 }
