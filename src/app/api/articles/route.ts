@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { articles } from "@/utils/data";
-import { Article } from "@/app/articles/types";
 import { createArticleSchema } from "@/utils/validationSchema";
 import { CreateArticleDto } from "@/utils/dtos";
+import Article, { ArticleType } from "@/models/article";
+import connectDB from "@/libs/mongoose";
 
 /**
  * @method GET
@@ -12,8 +12,14 @@ import { CreateArticleDto } from "@/utils/dtos";
  * @access public
  */
 
-export function GET(request: NextRequest) {
-  return NextResponse.json(articles, { status: 200 });
+export async function GET(request: NextRequest) {
+  try {
+    await connectDB();
+    const allArticles = (await Article.find()) as ArticleType[];
+    return NextResponse.json(allArticles, { status: 200 });
+  } catch (e) {
+    return NextResponse.json("Something Went Error!", { status: 500 });
+  }
 }
 
 /**
@@ -35,13 +41,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    const newArticle: Article = {
-      id: articles.length + 1,
-      title: body.title,
-      body: body.body,
-      userId: articles.length + 101,
-    };
+    await connectDB();
+    const newArticle = (await Article.create(body)) as ArticleType;
 
     return NextResponse.json(newArticle, { status: 201 });
   } catch (e) {

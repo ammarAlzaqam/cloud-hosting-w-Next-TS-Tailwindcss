@@ -1,7 +1,7 @@
 import { TiTick } from "react-icons/ti";
 import styles from "./style.module.css";
 import Image from "next/image";
-import CloudImage from "../../../../../public/cloud-hosting.png";
+import CloudImage from "../../../../../public/images/cloud-hosting.png";
 
 export default function Hero() {
   return (

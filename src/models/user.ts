@@ -22,7 +22,15 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
     },
 
-    isAdmin: Boolean,
+    avatar: {
+      type: String,
+      default: "/images/default-avatar.png",
+    },
+
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

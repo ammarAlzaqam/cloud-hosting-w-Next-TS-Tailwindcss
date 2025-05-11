@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-let cached = (global as any).mongoose;
-
-if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+declare global {
+  var mongoose: any;
 }
+
+let cached = global.mongoose || { conn: null, promise: null };
 
 export default async function connectDB() {
   if (cached.conn) return cached.conn;
@@ -16,5 +16,6 @@ export default async function connectDB() {
   }
 
   cached.conn = await cached.promise;
+  global.mongoose = cached;
   return cached.conn;
 }

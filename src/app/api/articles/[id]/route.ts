@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { articles } from "@/utils/data";
 import { UpdateArticleDto } from "@/utils/dtos";
+import Article, { ArticleType } from "@/models/article";
+import { Props } from "@/utils/types";
+import connectDB from "@/libs/mongoose";
 
 /**
  * @method GET
@@ -9,15 +11,11 @@ import { UpdateArticleDto } from "@/utils/dtos";
  * @description This API route handles GET requests to fetch a specific article by its ID. It returns a JSON response with the article data and a status code of 200 if the article is found, or a 404 status code if not found.
  * @access public
  */
-
-interface Props {
-  params: Promise<{ id: string }>;
-}
-
 export async function GET(request: NextRequest, { params }: Props) {
   const { id } = await params;
   try {
-    const article = articles.find((article) => article.id === parseInt(id));
+    await connectDB();
+    const article = (await Article.findById(id)) as ArticleType;
 
     if (!article) {
       return NextResponse.json(
@@ -34,19 +32,22 @@ export async function GET(request: NextRequest, { params }: Props) {
     );
   }
 }
-
 /**
- * @method PUT
+ * @method PATCH
  * @route ~/api/articles/:id
  * @desc Update Article by ID
- * @description This API route handles PUT requests to fetch and update a specific article by its ID. It returns a JSON response with updated data for the article and a status code of 200 if the article is found, or a 404 status code if not found.
+ * @description This API route handles PATCH requests to fetch and update a specific article by its ID. It returns a JSON response with updated data for the article and a status code of 200 if the article is found, or a 404 status code if not found.
  * @access public
  */
-export async function PUT(request: NextRequest, { params }: Props) {
+export async function PATCH(request: NextRequest, { params }: Props) {
   const { id } = await params;
   try {
+    await connectDB();
     const body = (await request.json()) as UpdateArticleDto;
-    const article = articles.find((a) => a.id === parseInt(id));
+    const article = (await Article.findByIdAndUpdate(id, body, {
+      new: true,
+    })) as ArticleType;
+
     if (!article) {
       return NextResponse.json(
         { message: "Article not found" },
@@ -76,7 +77,8 @@ export async function PUT(request: NextRequest, { params }: Props) {
 export async function DELETE(request: NextRequest, { params }: Props) {
   const { id } = await params;
   try {
-    const article = articles.find((a) => a.id === parseInt(id));
+    await connectDB();
+    const article = (await Article.findByIdAndDelete(id)) as ArticleType;
     if (!article) {
       return NextResponse.json(
         { message: "Article not found" },

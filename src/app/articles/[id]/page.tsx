@@ -1,14 +1,9 @@
+import { Props } from "@/utils/types";
 import AddCommentForm from "../components/comments/AddCommentForm";
 import CommentItem from "../components/comments/CommentItem";
 import { getPost } from "../requests";
 import { Article } from "../types";
 import BackButton from "./BackButton";
-
-interface Props {
-  params: Promise<{
-    id: string;
-  }>;
-};
 
 export default async function SingleArticlePage({ params }: Props) {
   const { id } = await params;

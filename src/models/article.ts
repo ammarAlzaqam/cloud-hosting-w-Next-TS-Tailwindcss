@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 
 const articleSchema = new mongoose.Schema(
   {
@@ -20,6 +20,8 @@ const articleSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+export type ArticleType = InferSchemaType<typeof articleSchema>;
 
 export default mongoose.models.Article ||
   mongoose.model("Article", articleSchema);
