@@ -7,7 +7,7 @@ interface ArticleItemProps {
 
 export default function ArticleItem({ article }: ArticleItemProps) {
   return (
-    <div className=" flex flex-col justify-between flex-[1-1] p-5 rounded-lg my-1 shadow-lg border-2 border-gray-400 bg-emerald-200 hover:bg-amber-200 w-full md:w-2/5 lg:w-1/4">
+    <div className="flex flex-col justify-between flex-[1-1] p-5 rounded-lg my-1 shadow-lg border-2 border-gray-400 bg-emerald-200 hover:bg-amber-200 w-full md:w-2/5 lg:w-1/4">
       <div>
         <h3 className="text-xl font-bold text-gray-900 line-clamp-2 ">
           {article.title}

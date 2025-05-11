@@ -8,6 +8,7 @@ import Pagination from "./components/Pagination";
 
 const ArticlePage = async () => {
   const articles: Article[] = await getPosts();
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
 
   return (
     <>

@@ -4,7 +4,7 @@ import { getPost } from "../requests";
 import { Article } from "../types";
 import BackButton from "./BackButton";
 
-type Props = {
+interface Props {
   params: Promise<{
     id: string;
   }>;
@@ -26,9 +26,7 @@ export default async function SingleArticlePage({ params }: Props) {
         </div>
       </div>
       <AddCommentForm />
-      <h4 className="text-xl text-gray-800 font-bold mt-10 mb-4">
-        Comments
-      </h4>
+      <h4 className="text-xl text-gray-800 font-bold mt-10 mb-4 p-1">Comments</h4>
       <CommentItem />
       <CommentItem />
       <CommentItem />
