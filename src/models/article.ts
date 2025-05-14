@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { Document, InferSchemaType, Model } from "mongoose";
 
 const articleSchema = new mongoose.Schema(
   {
@@ -21,7 +21,39 @@ const articleSchema = new mongoose.Schema(
   }
 );
 
-export type ArticleType = InferSchemaType<typeof articleSchema>;
+/**
+ * articles paginating
+ * @param pageNumber
+ * @param sort
+ * @param limit
+ * @returns { articles , numberOfPages }
+ */
+articleSchema.statics.pagination = async function (
+  pageNumber: number = 1,
+  sort: number = -1,
+  limit: number = 6
+) {
+  const skip = (pageNumber - 1) * limit;
+  const articles = await this.find()
+    .sort({ createdAt: sort })
+    .skip(skip)
+    .limit(limit);
+  const noOfArticles = await this.countDocuments();
 
-export default mongoose.models.Article ||
-  mongoose.model("Article", articleSchema);
+  const noOfPages = Math.ceil(noOfArticles / 6);
+  return { articles, noOfPages };
+};
+
+type ArticleType = InferSchemaType<typeof articleSchema>;
+
+export interface ArticleDocument extends ArticleType, Document {}
+interface ArticleModel extends Model<ArticleDocument> {
+  pagination(
+    pageNumber: number,
+    sort: number,
+    limit: number
+  ): Promise<{ articles: ArticleDocument[]; noOfPages: number }>;
+}
+
+export default (mongoose.models.Article as ArticleModel) ||
+  mongoose.model<ArticleDocument, ArticleModel>("Article", articleSchema);

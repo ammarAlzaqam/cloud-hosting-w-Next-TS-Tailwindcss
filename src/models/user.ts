@@ -100,7 +100,7 @@ userSchema.pre<UserDocument>("save", async function (next) {
 // Type definitions
 type UserSchemaType = InferSchemaType<typeof userSchema>;
 
-// Define the UserDocument type with generateJwtToken method
+// Define the UserDocument type with generateJwtToken, checkPassword methods
 export interface UserDocument extends UserSchemaType, Document {
   generateJwtToken(): Promise<string>;
   checkPassword(candidatePassword: string): Promise<Boolean>;
@@ -108,7 +108,7 @@ export interface UserDocument extends UserSchemaType, Document {
 }
 
 // Define the UserModel type with the verifyJwtToken static method
-export interface UserModel extends Model<UserDocument> {
+interface UserModel extends Model<UserDocument> {
 }
 
 // Export the model

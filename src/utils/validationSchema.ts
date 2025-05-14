@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-//?~start article schema
+//?~start Article schema
 // Create Article Schema
 export const createArticleSchema = z.object({
   title: z
@@ -25,9 +25,9 @@ export const updateArticleSchema = z.object({
     .optional(),
   description: z.string().min(2).min(10).max(500).optional(),
 });
-//?#end article schema
+//?#end Article schema
 
-//?~start user schema
+//?~start User schema
 // Create User Schema
 export const registerSchema = z.object({
   username: z.string().min(2).max(100),
@@ -51,7 +51,7 @@ export const loginSchema = z.object({
   password: z.string().max(50),
 });
 
-// update User schema
+// Update User schema
 export const updateUserSchema = z.object({
   username: z.string().min(2).max(100).optional(),
   email: z
@@ -63,9 +63,15 @@ export const updateUserSchema = z.object({
     .optional(),
   password: z.string().min(6).max(50).optional(),
 });
-//?#end user schema
+//?#end User schema
 
+//?~start Comment schema
+// Create comment schema
 export const createCommentSchema = z.object({
   text: z.string().max(200),
   articleId: z.string(),
+});
+
+export const updateCommentSchema = z.object({
+  text: z.string().max(200),
 });

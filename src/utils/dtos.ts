@@ -1,3 +1,4 @@
+//? Article
 export interface CreateArticleDto {
   title: string;
   description: string;
@@ -6,6 +7,8 @@ export interface UpdateArticleDto {
   title?: string;
   description?: string;
 }
+
+//? User
 export interface RegisterUserDto {
   username: string;
   email: string;
@@ -23,7 +26,12 @@ export interface UpdateUserDto {
   password?: string;
 }
 
+//? Comments
 export interface CreateCommentDto {
   text: string;
   articleId: string;
+}
+
+export interface UpdateCommentDto {
+  text: string;
 }

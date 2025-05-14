@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { UpdateArticleDto } from "@/utils/dtos";
-import Article, { ArticleType } from "@/models/article";
+import Article, { ArticleDocument } from "@/models/article";
 import { Props } from "@/utils/types";
 import connectDB from "@/libs/mongoose";
 import User from "@/models/user";
 import { updateArticleSchema } from "@/utils/validationSchema";
+import Comment, { CommentDocument } from "@/models/comment";
 
 /**
  * @method GET
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest, { params }: Props) {
   const { id } = await params;
   try {
     await connectDB();
-    const article = (await Article.findById(id)) as ArticleType;
+    const article = (await Article.findById(id)) as ArticleDocument;
 
     if (!article) {
       return NextResponse.json(
@@ -26,7 +27,11 @@ export async function GET(request: NextRequest, { params }: Props) {
       );
     }
 
-    return NextResponse.json(article, { status: 200 });
+    const comments = (await Comment.find({
+      articleId: article._id,
+    }).populate("userId", "username").sort({ createdAt: -1 })) as CommentDocument[];
+
+    return NextResponse.json({ article, comments }, { status: 200 });
   } catch (e) {
     return NextResponse.json(
       { message: "Something went wrong!" },
@@ -40,7 +45,7 @@ export async function GET(request: NextRequest, { params }: Props) {
  * @route ~/api/articles/:id
  * @desc Update Article by ID
  * @description This API route handles PATCH requests to fetch and update a specific article by its ID. It returns a JSON response with updated data for the article and a status code of 200 if the article is found, or a 404 status code if not found.
- * @access public
+ * @access private (Only Admin can update Article)
  */
 export async function PATCH(request: NextRequest, { params }: Props) {
   const { id } = await params;
@@ -71,7 +76,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
 
     const article = (await Article.findByIdAndUpdate(id, body, {
       new: true,
-    })) as ArticleType;
+    })) as ArticleDocument;
 
     if (!article) {
       return NextResponse.json(
@@ -97,7 +102,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
  * @route ~/api/articles/:id
  * @desc Delete Article by ID
  * @description This API route handles PUT requests to fetch and delete a specific article by its ID. It returns a JSON response with the deleted article and a status code of 200 if the article is found, or a 404 status code if not found.
- * @access public
+ * @access private (Only Admin can delete Article)
  */
 export async function DELETE(request: NextRequest, { params }: Props) {
   const { id } = await params;
@@ -120,7 +125,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
         { status: 401 }
       );
 
-    const article = (await Article.findByIdAndDelete(id)) as ArticleType;
+    const article = (await Article.findByIdAndDelete(id)) as ArticleDocument;
     if (!article) {
       return NextResponse.json(
         { message: "Article not found" },

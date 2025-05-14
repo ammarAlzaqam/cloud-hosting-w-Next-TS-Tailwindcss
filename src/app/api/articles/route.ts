@@ -1,23 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createArticleSchema } from "@/utils/validationSchema";
 import { CreateArticleDto } from "@/utils/dtos";
-import Article, { ArticleType } from "@/models/article";
+import Article, { ArticleDocument } from "@/models/article";
 import connectDB from "@/libs/mongoose";
 import User from "@/models/user";
+import { ARTICLE_PER_PAGE } from "@/utils/constants";
 
 /**
  * @method GET
- * @route ~/api/articles
- * @desc Get All Articles
+ * @route ~/api/articles?pageNumber=value1&sort=value2
+ * @desc Get Articles by pageNumber
  * @description This API route handles GET requests to fetch a list of articles. It returns a JSON response with the articles data and a status code of 200.
  * @access public
  */
 
 export async function GET(request: NextRequest) {
   try {
+    //* get pageNumber & sort from query
+    const pageNumber = parseInt(
+      request.nextUrl.searchParams.get("pageNumber") || "1",
+      10
+    );
+    const sort = parseInt(
+      request.nextUrl.searchParams.get("sort") || "-1",
+      10
+    );
+
     await connectDB();
-    const allArticles = (await Article.find()) as ArticleType[];
-    return NextResponse.json(allArticles, { status: 200 });
+    const { articles, noOfPages } = await Article.pagination(
+      pageNumber,
+      sort,
+      ARTICLE_PER_PAGE
+    );
+    return NextResponse.json({ articles, noOfPages }, { status: 200 });
   } catch (e) {
     return NextResponse.json("Something Went Error!", { status: 500 });
   }
@@ -28,7 +43,7 @@ export async function GET(request: NextRequest) {
  * @route ~/api/articles
  * @desc Crate a New Article
  * @description This API route handles POST requests to create a new article. It expects a JSON payload in the request body containing the article data. The new article is added to the articles array, and a JSON response with the created article and a status code of 201 is returned.
- * @access private
+ * @access private (Only Admin can create Article)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -60,7 +75,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const newArticle = (await Article.create(body)) as ArticleType;
+    const newArticle = (await Article.create(body)) as ArticleDocument;
 
     return NextResponse.json(newArticle, { status: 201 });
   } catch (e) {

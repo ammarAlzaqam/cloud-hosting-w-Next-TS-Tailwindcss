@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
 
   const isProfilePath = url.pathname.startsWith("/api/users/profile");
 
-  const isCommentPath = url.pathname.startsWith("/api/comments")
+  const isCommentPath = url.pathname.startsWith("/api/comments");
 
   if (isUploadPath || isArticlePath || isProfilePath || isCommentPath) {
     return await protectRoute(request);
@@ -25,6 +25,6 @@ export const config = {
     "/api/users/upload",
     "/api/users/profile",
     "/api/articles/:path*",
-    "/api/comments",
+    "/api/comments/:path*",
   ],
 };

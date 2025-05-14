@@ -2,7 +2,7 @@ import { CreateCommentDto } from "@/utils/dtos";
 import { createCommentSchema } from "@/utils/validationSchema";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-import Comment from "@/models/comment";
+import Comment, { CommentDocument } from "@/models/comment";
 import connectDB from "@/libs/mongoose";
 import User, { UserDocument } from "@/models/user";
 
@@ -24,26 +24,13 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = request.headers.get("x-user-id");
-    if (!userId) {
-      return NextResponse.json(
-        { message: "Unauthorized - No user ID in headers" },
-        { status: 401 }
-      );
-    }
-
-    if (
-      !mongoose.Types.ObjectId.isValid(userId) ||
-      !mongoose.Types.ObjectId.isValid(body.articleId)
-    ) {
-      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
-    }
 
     await connectDB();
     const comment = await Comment.create({
       text: body.text,
       userId,
       articleId: body.articleId,
-    });
+    }) as CommentDocument;
     return NextResponse.json(
       { message: "comment created successfully", comment },
       { status: 201 }
@@ -83,7 +70,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({message: "only admin, access denied"}, {status: 403})
     }
 
-    const comments = await Comment.find();
+    const comments = await Comment.find() as CommentDocument[];
     return NextResponse.json(comments, { status: 200 });
   } catch (e) {
     console.error((e as Error).message);
