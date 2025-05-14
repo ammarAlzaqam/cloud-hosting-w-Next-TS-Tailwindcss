@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyJwtToken } from "../jwt/verifyJwtToken";
+import { JwtPayloadType } from "@/utils/types";
 
 /**
  * check if token is valid!
  * @param request
  * @returns UserIdHeaderResponse or Error Response
  */
-export default async function protectRoute(request: NextRequest) {
+export async function protectRoute(request: NextRequest) {
   try {
     //! check token exist
-    const token = request.cookies.get("token")?.value;
+    const token = request.cookies.get("token")?.value as string;
     if (!token) throw new Error("No token");
 
     //* store token in new Header

@@ -41,14 +41,13 @@ export async function POST(request: NextRequest) {
     //* delete password before send user
     const userObject = newUser.toObject();
     delete userObject.password;
-    const response = NextResponse.json(
-      { message: "user created successfully", userObject },
-      { status: 201 }
-    );
 
     //* set cookies with token
-    setAuthCookie(response, token);
-    return response;
+    const cookie = setAuthCookie(token);
+    return NextResponse.json(
+      { message: "Registered & authenticated", userObject },
+      { status: 201, headers: { "Set-Cookie": cookie } }
+    );
   } catch (e) {
     console.error(e instanceof Error ? e : "Something went wrong");
     return NextResponse.json(

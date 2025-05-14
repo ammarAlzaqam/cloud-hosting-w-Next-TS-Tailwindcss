@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import cloudinary from "cloudinary";
+import cloudinary from "./cloudinary";
 
 /**
  * Upload user avatar to Cloudinary
@@ -34,7 +34,7 @@ export default async function uploadUserAvatar(request: NextRequest) {
     );
 
     //TODO>> Return the result from Cloudinary (like url, public_id, etc)
-    return uploadResult
+    return uploadResult;
   } catch {
     return NextResponse.json(
       { message: "Failed to upload image" },

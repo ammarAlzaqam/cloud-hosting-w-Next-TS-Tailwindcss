@@ -1,6 +1,6 @@
 import mongoose, { Document, InferSchemaType, Model } from "mongoose";
 import bcrypt from "bcryptjs";
-import { jwtVerify, SignJWT } from "jose";
+import { SignJWT } from "jose";
 import { JwtPayloadType } from "@/utils/types";
 
 // Define the schema

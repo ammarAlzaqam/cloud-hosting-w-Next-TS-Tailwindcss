@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
  * @method POST
  * @route ~/api/users/login
  * @desc login user
- * @access Private
+ * @access public
  */
 export async function POST(request: NextRequest) {
   try {
@@ -50,13 +50,11 @@ export async function POST(request: NextRequest) {
     delete userObject.password;
 
     //* Build response & set cookie
-    const response = NextResponse.json(
-      { message: "login successfully", userObject },
-      { status: 200 }
+    const cookie = setAuthCookie(token);
+    return NextResponse.json(
+      { message: "Login & authenticated", userObject },
+      { status: 200, headers: { "Set-Cookie": cookie } }
     );
-    setAuthCookie(response, token);
-
-    return response;
   } catch (e) {
     console.error((e as Error).message);
     return NextResponse.json(

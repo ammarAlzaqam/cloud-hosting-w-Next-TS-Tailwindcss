@@ -3,6 +3,8 @@ import { UpdateArticleDto } from "@/utils/dtos";
 import Article, { ArticleType } from "@/models/article";
 import { Props } from "@/utils/types";
 import connectDB from "@/libs/mongoose";
+import User from "@/models/user";
+import { updateArticleSchema } from "@/utils/validationSchema";
 
 /**
  * @method GET
@@ -32,6 +34,7 @@ export async function GET(request: NextRequest, { params }: Props) {
     );
   }
 }
+
 /**
  * @method PATCH
  * @route ~/api/articles/:id
@@ -43,7 +46,29 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   const { id } = await params;
   try {
     await connectDB();
+    const userId = request.headers.get("x-user-id");
+    const user = await User.findById(userId);
+
+    //! check user
+    if (!user)
+      return NextResponse.json(
+        { message: "You don't have an account!" },
+        { status: 401 }
+      );
+
+    //! check isAdmin property
+    if (!user.isAdmin)
+      return NextResponse.json(
+        { message: "Only admins can update articles" },
+        { status: 401 }
+      );
+
     const body = (await request.json()) as UpdateArticleDto;
+    const validation = updateArticleSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json({ message: validation.error.issues[0].message });
+    }
+
     const article = (await Article.findByIdAndUpdate(id, body, {
       new: true,
     })) as ArticleType;
@@ -78,6 +103,23 @@ export async function DELETE(request: NextRequest, { params }: Props) {
   const { id } = await params;
   try {
     await connectDB();
+    const userId = request.headers.get("x-user-id");
+    const user = await User.findById(userId);
+
+    //! check user
+    if (!user)
+      return NextResponse.json(
+        { message: "You don't have an account!" },
+        { status: 401 }
+      );
+
+    //! check isAdmin property
+    if (!user.isAdmin)
+      return NextResponse.json(
+        { message: "Only admins can delete articles" },
+        { status: 401 }
+      );
+
     const article = (await Article.findByIdAndDelete(id)) as ArticleType;
     if (!article) {
       return NextResponse.json(
