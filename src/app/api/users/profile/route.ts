@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { UpdateUserDto } from "@/utils/dtos";
 import { updateUserSchema } from "@/utils/validationSchema";
 import bcrypt from "bcryptjs";
+import Comment from "@/models/comment";
 
 /**
  * @method GET
@@ -57,6 +58,10 @@ export async function DELETE(request: NextRequest) {
   try {
     const userId = request.headers.get("x-user-id");
 
+    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+    }
+
     if (!userId) {
       return NextResponse.json(
         { message: "Unauthorized - No user ID in headers" },
@@ -76,6 +81,8 @@ export async function DELETE(request: NextRequest) {
         { status: 404 }
       );
     }
+
+    await Comment.deleteMany({ userId: user._id });
 
     return NextResponse.json(
       { message: "User deleted successfully" },

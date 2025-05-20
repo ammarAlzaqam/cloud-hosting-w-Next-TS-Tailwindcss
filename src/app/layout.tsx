@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import ReactToast from "@/components/ReactToast";
+import CacheProviderEmotion from "@/utils/cachProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +34,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
       >
         <Header />
         <ReactToast />
-        <main className="container mx-auto flex-grow-1 flex flex-col ">
-          {children}
+        <main className="container mx-auto flex-grow-1 flex flex-col px-2 ">
+          <CacheProviderEmotion>{children}</CacheProviderEmotion>
         </main>
         <Footer />
       </body>

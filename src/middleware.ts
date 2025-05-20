@@ -1,20 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
-import { protectRoute } from "./libs/middleware/auth";
+import {
+  protectAdminPage,
+  protectLogin_registerPage,
+  protectRoute,
+} from "./libs/middleware/auth";
 
 export async function middleware(request: NextRequest) {
-  const url = request.nextUrl;
+  const path = request.nextUrl.pathname;
 
   // protect upload & article path, get userId from tokenCookie and send in req.header
-  const isUploadPath = url.pathname.startsWith("/api/users/upload");
+  const isUploadPath = path.startsWith("/api/users/upload");
   const isArticlePath =
-    url.pathname.startsWith("/api/articles") && request.method !== "GET";
+    path.startsWith("/api/articles") && request.method !== "GET";
+  const isProfilePath = path.startsWith("/api/users/profile");
+  const isCommentPath = path.startsWith("/api/comments");
 
-  const isProfilePath = url.pathname.startsWith("/api/users/profile");
+  const isRegisterOrLoginPath =
+    path.startsWith("/login") || path.startsWith("/register");
 
-  const isCommentPath = url.pathname.startsWith("/api/comments");
+  const isAdminPath = path.startsWith('/admin');
 
-  if (isUploadPath || isArticlePath || isProfilePath || isCommentPath) {
+  //! protect api routes
+  if (isUploadPath || isArticlePath || isProfilePath || isCommentPath)
     return await protectRoute(request);
+
+  //! protect register and login pages
+  if (isRegisterOrLoginPath) return protectLogin_registerPage(request);
+
+  //! redirect to "/home" if user request was "/"
+  if (path === "/") {
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+
+  //! protect Admin page => redirect to "/home" if not user or not admin
+  if(isAdminPath) {
+    return await protectAdminPage(request);
   }
 
   return NextResponse.next();
@@ -26,5 +46,9 @@ export const config = {
     "/api/users/profile",
     "/api/articles/:path*",
     "/api/comments/:path*",
+    "/",
+    "/login",
+    "/register",
+    "/admin/:path*"
   ],
 };

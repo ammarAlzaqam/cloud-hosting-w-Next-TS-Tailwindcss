@@ -20,7 +20,7 @@ export default function AdminDashboardLayout({
       <div className="overflow-height w-15 lg:w-1/5 bg-purple-600 text-white p-1 lg:p-5">
         <AdminSidebar />
       </div>
-      <div className="overflow-height w-full">{children}</div>
+      <div className="overflow-height overflow-auto w-full">{children}</div>
     </div>
   );
 }

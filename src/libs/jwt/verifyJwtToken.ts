@@ -10,6 +10,7 @@ export async function verifyJwtToken(token: string): Promise<JwtPayloadType> {
     const { payload } = await jwtVerify(token, JWT_SECRET_KEY);
     return payload as JwtPayloadType;
   } catch (e) {
+    console.error((e as Error).message);
     throw new Error("Invalid or expired token");
   }
 }

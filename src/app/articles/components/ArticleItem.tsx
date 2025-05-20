@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Article } from "../types";
+import { ArticleDocument } from "@/models/article";
 
 interface ArticleItemProps {
-  article: Article;
+  article: ArticleDocument;
 }
 
 export default function ArticleItem({ article }: ArticleItemProps) {
@@ -13,12 +13,12 @@ export default function ArticleItem({ article }: ArticleItemProps) {
           {article.title}
         </h3>
         <p className="text-sm text-gray-700 my-2 line-clamp-1">
-          {article.body}
+          {article.description}
         </p>
       </div>
       <Link
         className="text-xl bg-purple-700 hover:bg-purple-800 w-full block text-center p-1 text-white rounded-lg"
-        href={`/articles/${article.id}`}
+        href={`/articles/${article._id}`}
       >
         read more
       </Link>

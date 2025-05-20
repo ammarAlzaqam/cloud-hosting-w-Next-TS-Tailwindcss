@@ -2,14 +2,18 @@
 import * as React from "react";
 import { Slide, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { API_DOMAIN } from "@/utils/constants";
+import { CgSpinner } from "react-icons/cg";
 
 export default function LoginForm() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email) {
       return toast.error("Email is required", {
@@ -24,9 +28,20 @@ export default function LoginForm() {
       return toast.error("password is required");
     }
 
-    setEmail("");
-    setPassword("");
-    router.replace("/home");
+    try {
+      setLoading(true);
+      await axios.post(`${API_DOMAIN}/users/login`, { email, password });
+      setLoading(false);
+      setEmail("");
+      setPassword("");
+      router.replace("/home");
+      router.refresh();
+      toast.success("Your login successfully");
+    } catch (e: any) {
+      toast.error(e?.response?.data.message);
+      console.error(e);
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,10 +65,11 @@ export default function LoginForm() {
         }
       />
       <button
-        className="text-white hover:text-black bg-blue-800 hover:bg-blue-300 transition border rounded-md py-1 uppercase tracking-wide cursor-pointer "
+        className="flex disabled:cursor-not-allowed disabled:bg-gray-300 justify-center items-center text-white hover:text-black bg-blue-800 hover:bg-blue-300 transition border rounded-md py-1 uppercase tracking-wide cursor-pointer "
         type="submit"
+        disabled={loading}
       >
-        login
+        {loading ? <CgSpinner className="animate-spin text-2xl" /> : "login"}
       </button>
 
       <div>

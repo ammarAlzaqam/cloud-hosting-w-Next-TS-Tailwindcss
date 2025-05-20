@@ -1,8 +1,8 @@
+import { Metadata } from "next";
 import Hero from "./components/hero/Hero";
 import WebHostingPlan from "./components/WebHostingPlan";
 
 export default async function HomePage() {
-  // await new Promise((resolve) => setTimeout(resolve, 3000));
   return (
     <section>
       <Hero />
@@ -19,3 +19,9 @@ export default async function HomePage() {
     </section>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Home Page",
+  description: "in this page you can see all plans for cloud hosting",
+  icons: { icon: "/images/cloud-icon.png" },
+};

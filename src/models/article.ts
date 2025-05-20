@@ -44,7 +44,7 @@ articleSchema.statics.pagination = async function (
   return { articles, noOfPages };
 };
 
-type ArticleType = InferSchemaType<typeof articleSchema>;
+export type ArticleType = InferSchemaType<typeof articleSchema>;
 
 export interface ArticleDocument extends ArticleType, Document {}
 interface ArticleModel extends Model<ArticleDocument> {

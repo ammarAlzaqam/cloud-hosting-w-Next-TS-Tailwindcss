@@ -3,6 +3,7 @@ import { UpdateArticleDto } from "@/utils/dtos";
 import Article, { ArticleDocument } from "@/models/article";
 import { Props } from "@/utils/types";
 import connectDB from "@/libs/mongoose";
+import mongoose from "mongoose";
 import User from "@/models/user";
 import { updateArticleSchema } from "@/utils/validationSchema";
 import Comment, { CommentDocument } from "@/models/comment";
@@ -29,10 +30,17 @@ export async function GET(request: NextRequest, { params }: Props) {
 
     const comments = (await Comment.find({
       articleId: article._id,
-    }).populate("userId", "username").sort({ createdAt: -1 })) as CommentDocument[];
+    })
+      .populate({
+        path: "userId",
+        select: "username avatar",
+        model: "User", // optional لو مش معرف في السكيمه
+      })
+      .sort({ createdAt: -1 })) as CommentDocument[];
 
     return NextResponse.json({ article, comments }, { status: 200 });
   } catch (e) {
+    console.error((e as Error).message)
     return NextResponse.json(
       { message: "Something went wrong!" },
       { status: 500 }
@@ -52,6 +60,11 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   try {
     await connectDB();
     const userId = request.headers.get("x-user-id");
+
+    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+    }
+
     const user = await User.findById(userId);
 
     //! check user
@@ -90,6 +103,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
       { status: 200 }
     );
   } catch (e) {
+    console.error((e as Error).message)
     return NextResponse.json(
       { message: "Something went error" },
       { status: 500 }
@@ -109,6 +123,11 @@ export async function DELETE(request: NextRequest, { params }: Props) {
   try {
     await connectDB();
     const userId = request.headers.get("x-user-id");
+
+    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+    }
+
     const user = await User.findById(userId);
 
     //! check user
@@ -133,11 +152,14 @@ export async function DELETE(request: NextRequest, { params }: Props) {
       );
     }
 
+    await Comment.deleteMany({ articleId: article._id });
+
     return NextResponse.json(
       { message: "The article has been successfully deleted", article },
       { status: 200 }
     );
   } catch (e) {
+    console.error((e as Error).message)
     return NextResponse.json(
       { message: "Something went error" },
       { status: 500 }

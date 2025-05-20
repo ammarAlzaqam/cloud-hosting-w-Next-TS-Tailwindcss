@@ -30,6 +30,10 @@ export async function PATCH(request: NextRequest, { params }: Props) {
     const { id: commentId } = await params;
     const userId = request.headers.get("x-user-id");
 
+    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+    }
+
     if (!mongoose.Types.ObjectId.isValid(commentId))
       return NextResponse.json(
         { message: "Invalid comment id" },
@@ -85,6 +89,11 @@ export async function PATCH(request: NextRequest, { params }: Props) {
 export async function DELETE(request: NextRequest, { params }: Props) {
   try {
     const userId = request.headers.get("x-user-id");
+
+    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+    }
+
     const { id: commentId } = await params;
 
     //! Check if commentId is valid

@@ -1,13 +1,18 @@
 "use client";
+import { ArticleDocument } from "@/models/article";
 import { API_DOMAIN } from "@/utils/constants";
 import axios from "axios";
 import * as React from "react";
 import { CgSpinner } from "react-icons/cg";
 import { toast } from "react-toastify";
 
-export default function AddArticleForm() {
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
+interface EditArticleForm {
+    article: ArticleDocument;
+}
+
+export default function EditArticleForm({article}: EditArticleForm) {
+  const [title, setTitle] = React.useState(article.title);
+  const [description, setDescription] = React.useState(article.description);
   const [loading, setLoading] = React.useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -21,14 +26,12 @@ export default function AddArticleForm() {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${API_DOMAIN}/articles`, {
+      const response = await axios.patch(`${API_DOMAIN}/articles/${article._id}`, {
         title,
         description,
       });
       setLoading(false);
       toast.success(response?.data?.message);
-      setTitle("");
-      setDescription("");
     } catch (e: any) {
       const errorMsg = e?.response?.data.message;
       console.error(errorMsg);
@@ -57,11 +60,11 @@ export default function AddArticleForm() {
         }
       ></textarea>
       <button
-        className="flex disabled:cursor-not-allowed disabled:bg-gray-300 justify-center items-center  text-white hover:text-black bg-blue-800 hover:bg-blue-300 transition border rounded-md py-1 uppercase tracking-wide cursor-pointer "
+        className="flex disabled:cursor-not-allowed disabled:bg-gray-300 justify-center items-center  text-white hover:text-black bg-green-800 hover:bg-green-300 transition border rounded-md py-1 capitalize tracking-wide cursor-pointer "
         type="submit"
         disabled={loading}
       >
-        {loading ? <CgSpinner className="animate-spin text-2xl" /> : "Add"}
+        {loading ? <CgSpinner className="animate-spin text-2xl" /> : "edit"}
       </button>
     </form>
   );

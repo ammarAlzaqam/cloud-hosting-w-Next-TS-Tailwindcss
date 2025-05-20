@@ -5,7 +5,7 @@ import Article, { ArticleDocument } from "@/models/article";
 import connectDB from "@/libs/mongoose";
 import User from "@/models/user";
 import { ARTICLE_PER_PAGE } from "@/utils/constants";
-
+import mongoose from "mongoose";
 /**
  * @method GET
  * @route ~/api/articles?pageNumber=value1&sort=value2
@@ -21,10 +21,7 @@ export async function GET(request: NextRequest) {
       request.nextUrl.searchParams.get("pageNumber") || "1",
       10
     );
-    const sort = parseInt(
-      request.nextUrl.searchParams.get("sort") || "-1",
-      10
-    );
+    const sort = parseInt(request.nextUrl.searchParams.get("sort") || "-1", 10);
 
     await connectDB();
     const { articles, noOfPages } = await Article.pagination(
@@ -34,6 +31,7 @@ export async function GET(request: NextRequest) {
     );
     return NextResponse.json({ articles, noOfPages }, { status: 200 });
   } catch (e) {
+    console.error((e as Error).message);
     return NextResponse.json("Something Went Error!", { status: 500 });
   }
 }
@@ -49,6 +47,11 @@ export async function POST(request: NextRequest) {
   try {
     await connectDB();
     const userId = request.headers.get("x-user-id");
+
+    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+    }
+
     const user = await User.findById(userId);
 
     //! check user
@@ -77,8 +80,12 @@ export async function POST(request: NextRequest) {
     }
     const newArticle = (await Article.create(body)) as ArticleDocument;
 
-    return NextResponse.json(newArticle, { status: 201 });
+    return NextResponse.json(
+      { message: "Article created successfully" },
+      { status: 201 }
+    );
   } catch (e) {
+    console.error((e as Error).message);
     return NextResponse.json(
       { message: "Something went error" },
       { status: 500 }

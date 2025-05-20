@@ -25,12 +25,16 @@ export async function POST(request: NextRequest) {
 
     const userId = request.headers.get("x-user-id");
 
+    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+    }
+
     await connectDB();
-    const comment = await Comment.create({
+    const comment = (await Comment.create({
       text: body.text,
       userId,
       articleId: body.articleId,
-    }) as CommentDocument;
+    })) as CommentDocument;
     return NextResponse.json(
       { message: "comment created successfully", comment },
       { status: 201 }
@@ -48,7 +52,6 @@ export async function POST(request: NextRequest) {
  * @desc get comments
  * @access public
  */
-
 export async function GET(request: NextRequest) {
   try {
     const userId = request.headers.get("x-user-id");
@@ -59,6 +62,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
+    }
+
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json({ message: "Invalid User ID" }, { status: 400 });
     }
@@ -67,10 +74,13 @@ export async function GET(request: NextRequest) {
     const user = (await User.findById(userId)) as UserDocument;
 
     if (!user || !user?.isAdmin) {
-      return NextResponse.json({message: "only admin, access denied"}, {status: 403})
+      return NextResponse.json(
+        { message: "only admin, access denied" },
+        { status: 403 }
+      );
     }
 
-    const comments = await Comment.find() as CommentDocument[];
+    const comments = (await Comment.find()) as CommentDocument[];
     return NextResponse.json(comments, { status: 200 });
   } catch (e) {
     console.error((e as Error).message);

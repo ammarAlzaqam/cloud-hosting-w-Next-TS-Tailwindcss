@@ -15,10 +15,7 @@ export async function GET(request: NextRequest) {
       const defaultArticles = await Article.find()
         .limit(6)
         .sort({ createdAt: -1 });
-      return NextResponse.json(
-        { message: "Search text not found" },
-        { status: 400 }
-      );
+      return NextResponse.json(defaultArticles, { status: 400 });
     }
 
     const articles = await Article.find({
@@ -26,6 +23,7 @@ export async function GET(request: NextRequest) {
     });
     return NextResponse.json(articles, { status: 200 });
   } catch (e) {
+    console.error((e as Error).message)
     return NextResponse.json(
       { message: "Something went wrong" },
       { status: 500 }

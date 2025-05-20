@@ -16,7 +16,7 @@ export default function AdminSidebar() {
       <ul className="flex flex-col items-center lg:items-start mt-10 gap-5 text-xl text-gray-200">
         <li>
           <Link
-            href="/admin/articles-table"
+            href="/admin/articles-table?pageNumber=1"
             className="flex gap-1 items-center lg:border-b border-gray-300 hover:border-yellow-200 transition"
           >
             <MdOutlineArticle />

@@ -7,7 +7,7 @@ export default function BackButton() {
   return (
     <BiArrowBack
       onClick={() => router.back()}
-      className="cursor-pointer hover:bg-gray-500 hover:text-white transition-all delay-50 p-1 rounded-full text-2xl  "
+      className="cursor-pointer hover:bg-gray-500 hover:text-white transition-all delay-50 mr-1 rounded-full w-8 text-2xl  "
     />
   );
 }

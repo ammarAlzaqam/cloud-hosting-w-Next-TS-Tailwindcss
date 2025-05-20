@@ -98,7 +98,7 @@ userSchema.pre<UserDocument>("save", async function (next) {
 });
 
 // Type definitions
-type UserSchemaType = InferSchemaType<typeof userSchema>;
+export type UserSchemaType = InferSchemaType<typeof userSchema>;
 
 // Define the UserDocument type with generateJwtToken, checkPassword methods
 export interface UserDocument extends UserSchemaType, Document {

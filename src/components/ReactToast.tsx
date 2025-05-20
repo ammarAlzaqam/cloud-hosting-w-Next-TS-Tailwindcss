@@ -3,7 +3,7 @@ export default function ReactToast() {
   return (
     <ToastContainer
       position="top-center" //! position of the toast
-      autoClose={3000} //! duration in milliseconds
+      autoClose={2000} //! duration in milliseconds
       hideProgressBar={false} // hide progress bar
       newestOnTop={false} // show newest toast on top
       closeOnClick // close toast on click

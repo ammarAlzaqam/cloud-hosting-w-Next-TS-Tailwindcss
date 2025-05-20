@@ -6,7 +6,11 @@ import styles from "./header.module.css";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
 
-export default function Navbar() {
+interface NavbarProps {
+  isAdmin: boolean;
+}
+
+export default function Navbar({ isAdmin }: NavbarProps) {
   const [toggle, setToggle] = useState(false);
   return (
     <nav className={styles.navbar}>
@@ -50,7 +54,7 @@ export default function Navbar() {
           <Link
             onClick={() => setToggle((prev) => !prev)}
             className={styles.navLink}
-            href="/articles"
+            href="/articles?pageNumber=1"
           >
             Articles
           </Link>
@@ -61,13 +65,17 @@ export default function Navbar() {
           >
             About
           </Link>
-          <Link
-            onClick={() => setToggle((prev) => !prev)}
-            className={styles.navLink}
-            href="/admin"
-          >
-            Admin Dashboard
-          </Link>
+
+          {/* only admins can see this link */}
+          {isAdmin && (
+            <Link
+              onClick={() => setToggle((prev) => !prev)}
+              className={styles.navLink}
+              href="/admin"
+            >
+              Admin Dashboard
+            </Link>
+          )}
         </ul>
       </div>
     </nav>

@@ -1,14 +1,28 @@
 "use client";
+import { API_DOMAIN } from "@/utils/constants";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function AddCommentForm() {
-  const [text, setText] = useState("");
+interface AddCommentPropsType {
+  articleId: string;
+}
 
-  const fromSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+export default function AddCommentForm({ articleId }: AddCommentPropsType) {
+  const [text, setText] = useState("");
+  const router = useRouter();
+  const fromSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!text) return toast.error("Please write a comment!");
-    console.log({ text });
+    try {
+      await axios.post(`${API_DOMAIN}/comments`, { text, articleId });
+      setText("");
+      router.refresh();
+      toast.success("Comment created successfully")
+    } catch (e: any) {
+      toast.error(e?.response?.data.message);
+    }
   };
   return (
     <form onSubmit={fromSubmitHandler} className="my-7">
@@ -21,7 +35,12 @@ export default function AddCommentForm() {
           setText(e.target.value)
         }
       />
-      <button type="submit" className="mt-3 py-2 px-4 bg-green-700 rounded-lg text-white cursor-pointer hover:bg-green-900 transition">Comment</button>
+      <button
+        type="submit"
+        className="mt-3 py-2 px-4 bg-green-700 rounded-lg text-white cursor-pointer hover:bg-green-900 transition"
+      >
+        Comment
+      </button>
     </form>
   );
 }

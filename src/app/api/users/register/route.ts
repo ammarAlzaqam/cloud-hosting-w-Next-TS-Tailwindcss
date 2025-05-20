@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     //! validation for {username, email, password}
     const validation = registerSchema.safeParse(body);
     if (!validation.success) {
-      let errorMessage = validation.error.issues[0].message;
+      const errorMessage = validation.error.issues[0].message;
       return NextResponse.json({ message: errorMessage }, { status: 400 });
     }
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     //* set cookies with token
     const cookie = setAuthCookie(token);
     return NextResponse.json(
-      { message: "Registered & authenticated", userObject },
+      { message: "Registered & authenticated", user: userObject },
       { status: 201, headers: { "Set-Cookie": cookie } }
     );
   } catch (e) {

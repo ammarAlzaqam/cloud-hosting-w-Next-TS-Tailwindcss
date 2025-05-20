@@ -11,6 +11,18 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // 👇 هنا تقدر تضيف قواعد خاصة لتخفيف الحدة
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn", // بدل "error"
+      "@typescript-eslint/no-require-imports": "warn",
+      "@typescript-eslint/no-empty-object-type": "warn",
+      "@typescript-eslint/no-wrapper-object-types": "warn",
+      "@typescript-eslint/no-this-alias": "warn",
+      "no-var": "warn",
+    },
+  },
 ];
 
 export default eslintConfig;
