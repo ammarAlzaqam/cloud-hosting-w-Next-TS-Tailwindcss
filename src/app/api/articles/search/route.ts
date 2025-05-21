@@ -1,3 +1,4 @@
+import connectDB from "@/libs/mongoose";
 import Article from "@/models/article";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,6 +12,7 @@ export async function GET(request: NextRequest) {
   try {
     const searchText = request.nextUrl.searchParams.get("searchText");
     //! Check searchText content
+    await connectDB();
     if (!searchText) {
       const defaultArticles = await Article.find()
         .limit(6)
