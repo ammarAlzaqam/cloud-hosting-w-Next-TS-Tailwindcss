@@ -1,5 +1,6 @@
 import { API_DOMAIN } from "@/utils/constants";
 import { SingleArticle } from "@/utils/types";
+import { notFound } from "next/navigation";
 
 // get articles based on pageNumber
 export const getArticles = async (pageNumber: number) => {
@@ -19,8 +20,8 @@ export const getArticles = async (pageNumber: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching posts:", error);
-    throw new Error("Failed to fetch posts");
+    console.error("Error fetching articles:", error);
+    throw new Error("Failed to fetch articles");
   }
 };
 
@@ -33,13 +34,13 @@ export const getSingleArticle = async (id: string): Promise<SingleArticle> => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch data");
+      notFound();
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Error fetching posts:", error);
-    throw new Error("Failed to fetch posts");
+    console.error("Error fetching article:", error);
+    notFound();
   }
 };
 

@@ -11,6 +11,7 @@ export default async function SingleArticlePage({ params }: Props) {
   // Fetch the article data using the id    
   
   const { article, comments } = await getSingleArticle(articleId);
+
   return (
     <div className="mt-10 w-fit mx-auto">
       <div className="flex gap-2 items-start bg-gray-50 p-4 rounded-lg shadow-md ">
