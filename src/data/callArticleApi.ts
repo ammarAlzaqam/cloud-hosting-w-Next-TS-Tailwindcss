@@ -21,7 +21,7 @@ export const getArticles = async (pageNumber: number) => {
     return data;
   } catch (error) {
     console.error("Error fetching articles:", error);
-    throw new Error("Failed to fetch articles");
+    // throw new Error("Failed to fetch articles");
   }
 };
 
