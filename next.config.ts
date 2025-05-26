@@ -6,13 +6,8 @@ const nextConfig: NextConfig = {
   },
   
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "th.bing.com",
-      }
-    ]
-  }
+    domains: ['res.cloudinary.com'],
+  },
 };
 
 export default nextConfig;

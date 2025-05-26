@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema(
       default: "/images/default-avatar.png",
     },
 
+    avatarPublicId: {
+      type: String,
+    },
+
     isAdmin: {
       type: Boolean,
       default: false,
@@ -108,8 +112,7 @@ export interface UserDocument extends UserSchemaType, Document {
 }
 
 // Define the UserModel type with the verifyJwtToken static method
-interface UserModel extends Model<UserDocument> {
-}
+interface UserModel extends Model<UserDocument> {}
 
 // Export the model
 export default (mongoose.models.User as UserModel) ||

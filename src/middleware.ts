@@ -9,21 +9,18 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // protect upload & article path, get userId from tokenCookie and send in req.header
+
   const isUploadPath = path.startsWith("/api/users/upload");
   const isArticlePath =
     path.startsWith("/api/articles") && request.method !== "GET";
   const isProfilePath = path.startsWith("/api/users/profile");
   const isCommentPath = path.startsWith("/api/comments");
-
-  const isRegisterOrLoginPath =
-    path.startsWith("/login") || path.startsWith("/register");
-
-  const isAdminPath = path.startsWith('/admin');
-
-  //! protect api routes
+  //! protect api routes and profile route
   if (isUploadPath || isArticlePath || isProfilePath || isCommentPath)
     return await protectRoute(request);
 
+  const isRegisterOrLoginPath =
+    path.startsWith("/login") || path.startsWith("/register");
   //! protect register and login pages
   if (isRegisterOrLoginPath) return protectLogin_registerPage(request);
 
@@ -32,8 +29,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 
+  const isAdminPath = path.startsWith("/admin");
   //! protect Admin page => redirect to "/home" if not user or not admin
-  if(isAdminPath) {
+  if (isAdminPath) {
     return await protectAdminPage(request);
   }
 
@@ -49,6 +47,6 @@ export const config = {
     "/",
     "/login",
     "/register",
-    "/admin/:path*"
+    "/admin/:path*",
   ],
 };

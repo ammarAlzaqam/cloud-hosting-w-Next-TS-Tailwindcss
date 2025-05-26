@@ -11,17 +11,12 @@ export default async function uploadUserAvatar(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get("avatar") as File | null;
 
-    //! Check if file is uploaded
     if (!file)
-      return NextResponse.json(
-        { message: "No file uploaded" },
-        { status: 400 }
-      );
+      throw new Error("No file uploaded");
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    //* Upload to Cloudinary
     const uploadResult = await new Promise<cloudinary.UploadApiResponse>(
       (resolve, reject) => {
         cloudinary.v2.uploader
@@ -33,12 +28,11 @@ export default async function uploadUserAvatar(request: NextRequest) {
       }
     );
 
-    //TODO>> Return the result from Cloudinary (like url, public_id, etc)
-    return uploadResult;
-  } catch {
-    return NextResponse.json(
-      { message: "Failed to upload image" },
-      { status: 500 }
-    );
+    return {
+      secure_url: uploadResult.secure_url,
+      public_id: uploadResult.public_id,
+    };
+  } catch (e) {
+    throw new Error("Failed to upload image");
   }
 }

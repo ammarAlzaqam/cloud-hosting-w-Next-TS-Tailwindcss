@@ -3,11 +3,11 @@ import { API_DOMAIN } from "@/utils/constants";
 import axios from "axios";
 
 // get user data
-export async function getUserData(cookie?: any) {
+export async function getUserData(cookie: any) {
   try {
     const response = await axios.get(
       `${API_DOMAIN}/users/profile`,
-      cookie && {
+      {
         headers: {
           Cookie: cookie,
         },

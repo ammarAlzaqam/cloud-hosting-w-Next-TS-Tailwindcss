@@ -31,13 +31,15 @@ export default function CommentItem({ comment }: { comment: CommentWithUser }) {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-4">
           {user?.avatar ? (
-            <Image
-              src={user.avatar}
-              alt="user avatar"
-              width={45}
-              height={45}
-              className="rounded-full p-1.5 border-gray-400 shadow-md"
-            />
+            <div className="rounded-full shadow-xl border-1 border-gray-300">
+              <Image
+                src={user.avatar}
+                alt="user avatar"
+                width={45}
+                height={45}
+                className="rounded-full"
+              />
+            </div>
           ) : (
             <div className="w-11 h-11 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full text-sm font-bold">
               ?
@@ -57,7 +59,9 @@ export default function CommentItem({ comment }: { comment: CommentWithUser }) {
           </div>
         </div>
         <div>
-          <p className="text-gray-50 px-2 py-1 bg-cyan-500 rounded-full" >{dayjs(comment.createdAt).format("DD/MM/YY")}</p>
+          <p className="text-gray-50 px-2 py-1 bg-cyan-500 rounded-full">
+            {dayjs(comment.createdAt).format("DD/MM/YY")}
+          </p>
         </div>
       </div>
 
@@ -84,7 +88,9 @@ export default function CommentItem({ comment }: { comment: CommentWithUser }) {
           >
             <FaTrash className="text-xl" />
           </button>
-          {openEdit && <EditCommentModal setOpenEdit={setOpenEdit} comment={comment} />}
+          {openEdit && (
+            <EditCommentModal setOpenEdit={setOpenEdit} comment={comment} />
+          )}
         </div>
       )}
     </div>
