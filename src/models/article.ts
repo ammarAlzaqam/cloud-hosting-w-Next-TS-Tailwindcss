@@ -40,8 +40,7 @@ articleSchema.statics.pagination = async function (
     .limit(limit);
   const noOfArticles = await this.countDocuments();
 
-  const noOfPages = Math.ceil(noOfArticles / 6);
-  return { articles, noOfPages };
+  return { articles, noOfArticles };
 };
 
 export type ArticleType = InferSchemaType<typeof articleSchema>;
@@ -52,7 +51,7 @@ interface ArticleModel extends Model<ArticleDocument> {
     pageNumber: number,
     sort: number,
     limit: number
-  ): Promise<{ articles: ArticleDocument[]; noOfPages: number }>;
+  ): Promise<{ articles: ArticleDocument[]; noOfArticles: any }>;
 }
 
 export default (mongoose.models.Article as ArticleModel) ||

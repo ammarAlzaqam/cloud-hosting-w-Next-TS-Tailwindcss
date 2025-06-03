@@ -13,7 +13,6 @@ import mongoose from "mongoose";
  * @description This API route handles GET requests to fetch a list of articles. It returns a JSON response with the articles data and a status code of 200.
  * @access public
  */
-
 export async function GET(request: NextRequest) {
   try {
     //* get pageNumber & sort from query
@@ -24,12 +23,12 @@ export async function GET(request: NextRequest) {
     const sort = parseInt(request.nextUrl.searchParams.get("sort") || "-1", 10);
 
     await connectDB();
-    const { articles, noOfPages } = await Article.pagination(
+    const { articles, noOfArticles } = await Article.pagination(
       pageNumber,
       sort,
       ARTICLE_PER_PAGE
     );
-    return NextResponse.json({ articles, noOfPages }, { status: 200 });
+    return NextResponse.json({ articles, noOfArticles }, { status: 200 });
   } catch (e) {
     console.error((e as Error).message);
     return NextResponse.json("Something Went Error!", { status: 500 });

@@ -1,6 +1,6 @@
 import { getArticles } from "@/data/callArticleApi";
 import { ArticleDocument } from "@/models/article";
-import { API_DOMAIN } from "@/utils/constants";
+import { API_DOMAIN, ARTICLE_PER_PAGE } from "@/utils/constants";
 import axios from "axios";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -15,8 +15,11 @@ export default async function AdminArticlesPage({
   searchParams,
 }: AdminArticlesPageProps) {
   const { pageNumber } = await searchParams;
-  const { articles, noOfPages } = await getArticles(parseInt(pageNumber, 10));
-
+  const { articles, noOfArticles } = await getArticles(
+    parseInt(pageNumber, 10)
+  );
+  const noOfPages = Math.ceil(noOfArticles / ARTICLE_PER_PAGE);
+  
   //* Get article title with only 2 words and delete extra spaces
   const articleTitle = (title: string): string => {
     const words = title.trim().split(/\s+/);

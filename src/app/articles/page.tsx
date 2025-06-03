@@ -4,6 +4,7 @@ import ArticleItem from "./components/ArticleItem";
 import { getArticles } from "@/data/callArticleApi";
 import SearchArticleInput from "./components/SearchArticleInput";
 import Pagination from "./components/Pagination";
+import { ARTICLE_PER_PAGE } from "@/utils/constants";
 
 interface ArticlesPageProps {
   searchParams?: Promise<{ pageNumber: string | undefined }>;
@@ -11,13 +12,15 @@ interface ArticlesPageProps {
 
 interface ArticlesData {
   articles: ArticleDocument[];
-  noOfPages: number;
+  noOfArticles: number;
 }
 
 const ArticlePage = async ({ searchParams }: ArticlesPageProps) => {
   const pageNumber = parseInt((await searchParams)?.pageNumber || "1", 10);
-  const { articles, noOfPages }: ArticlesData = await getArticles(pageNumber);
-
+  const { articles, noOfArticles }: ArticlesData = await getArticles(
+    pageNumber
+  );
+  const noOfPages = Math.ceil(noOfArticles / ARTICLE_PER_PAGE);
   return (
     <>
       <SearchArticleInput />

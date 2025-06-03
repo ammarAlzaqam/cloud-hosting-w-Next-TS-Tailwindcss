@@ -2,7 +2,6 @@ import { serialize } from "cookie";
 
 /**
  * Set Auth Token in Cookies
- * @param response NextResponse instance
  * @param token JWT Token
  */
 export function setAuthCookie(token: string) {

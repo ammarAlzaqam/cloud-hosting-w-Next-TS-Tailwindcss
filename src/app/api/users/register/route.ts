@@ -1,9 +1,3 @@
-/**
- * @method POST
- * @route ~/api/users/register
- * @desc Create New User
- * @access public
- */
 import { setAuthCookie } from "@/libs/cookies";
 import connectDB from "@/libs/mongoose";
 import User, { UserDocument } from "@/models/user";
@@ -11,6 +5,12 @@ import { RegisterUserDto } from "@/utils/dtos";
 import { registerSchema } from "@/utils/validationSchema";
 import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * @method POST
+ * @route ~/api/users/register
+ * @desc Create New User
+ * @access public
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as RegisterUserDto;
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    //TODO>> add new usr in DB
+    //TODO>> add new user in DB
     const newUser = (await User.create(body)) as UserDocument;
     //* generate token
     const token = await newUser.generateJwtToken();
