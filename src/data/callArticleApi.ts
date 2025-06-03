@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 export const getArticles = async (pageNumber: number) => {
   try {
     const response = await fetch(
-      `${process.env.API_PRODUCTION_DOMAIN}/articles?pageNumber=${pageNumber}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/articles?pageNumber=${pageNumber}`,
       {
         method: "GET",
         cache: "no-store",
