@@ -20,6 +20,8 @@ const ArticlePage = async ({ searchParams }: ArticlesPageProps) => {
   const { articles, noOfArticles }: ArticlesData = await getArticles(
     pageNumber
   );
+  if (!articles) return <p>No articles found</p>;
+  
   const noOfPages = Math.ceil(noOfArticles / ARTICLE_PER_PAGE);
   return (
     <>
